@@ -1,0 +1,71 @@
+#include "Form.hpp"
+
+Form::Form(std::string name, int gradeSign, int gradeExec): name(name), gradeSign(gradeSign), gradeExec(gradeExec), toSigned(false)
+{
+	checkGradeExecSign(gradeExec, gradeSign);
+	std::cout << "Constructor is called "<< name << std::endl;
+}
+
+Form::Form(Form const &copy): name(copy.name), gradeExec(copy.gradeSign), gradeSign(copy.gradeSign), toSigned(false)
+{
+	std::cout << "Copy constructor is called "<< name << std::endl;
+}
+
+void	Form::checkGradeExecSign(int gradeExec, int gradeSign)const
+{
+	if (gradeExec < 1 || gradeSign < 1)
+		throw (Form::GradeTooHighException());	
+	if (gradeExec > 150 || gradeSign > 150)
+		throw (Form::GradeTooLowException());
+}
+
+
+Form::~Form()
+{
+	std::cout << "Destructor is called"<< name << std::endl;
+}
+
+void	Form::beSigned(Bureaucrat const &bureaucrat)
+{
+	try
+	{
+		if (bureaucrat.GetGrade() <= this->gradeSign)
+		{
+			this->toSigned = true;
+			std::cout << bureaucrat.GetName() << " signed " << name << std::endl;
+		}
+		else
+			throw Form::GradeTooLowException();
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	
+}
+
+std::string	Form::getName()const
+{
+	return (this->name);
+}
+
+bool	Form::getSigned()const
+{
+	return (this->toSigned);
+}
+
+int	Form::getGradeSign()const
+{
+	return (this->gradeSign);
+}
+
+int	Form::getGradeExec()const
+{
+	return (this->gradeExec);
+}
+
+Form	&Form::operator=(Form const &copy)
+{
+	this->toSigned = copy.toSigned;
+	return (*this);
+}
